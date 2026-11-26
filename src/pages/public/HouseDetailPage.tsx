@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/Button'
 import { HouseGallery } from '@/components/property/HouseGallery'
 import { FloorplanViewer } from '@/components/property/FloorplanViewer'
 import { useAuth } from '@/contexts/AuthContext'
-import { getHouseTypeBySlug, getProjectBySlug } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import { APP_CONFIG } from '@/lib/config'
 import { formatArea, formatCurrency } from '@/utils/format'
 import type { UnitStatus } from '@/types/property'
@@ -40,8 +40,9 @@ export function HouseDetailPage() {
   const { slug = '' } = useParams()
   const navigate = useNavigate()
   const { user, isAuthenticated } = useAuth()
-  const house = getHouseTypeBySlug(slug)
-  const project = house ? getProjectBySlug(house.projectSlug) : undefined
+  const { projects, houseTypes } = usePublicCatalog()
+  const house = houseTypes.find((h) => h.slug === slug)
+  const project = house ? projects.find((p) => p.id === house.projectId || p.slug === house.projectSlug) : undefined
 
   const firstAvailableUnit = house?.sampleUnits.find((u) => u.status === 'available')
   const [selectedUnitId, setSelectedUnitId] = useState<string>(

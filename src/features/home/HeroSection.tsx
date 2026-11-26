@@ -1,7 +1,8 @@
 import { type FormEvent, useState } from 'react'
 import { ArrowRight, MapPin, Search, SlidersHorizontal, ShieldCheck, Building2, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { PRICE_RANGES, PROJECT_LOCATIONS } from '@/lib/demo-data'
+import { PRICE_RANGES } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import type { PropertySearchQuery } from '@/types/property'
 
 interface HeroSectionProps {
@@ -15,6 +16,7 @@ const trustStats = [
 ]
 
 export function HeroSection({ onSearch }: HeroSectionProps) {
+  const { locations } = usePublicCatalog()
   const [keyword, setKeyword] = useState('')
   const [location, setLocation] = useState('Semua Lokasi')
   const [priceRange, setPriceRange] = useState('all')
@@ -152,7 +154,7 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
                     onChange={(e) => setLocation(e.target.value)}
                     className="h-11 w-full rounded-xl border border-[#E3E0D6] bg-[#F5F4EF]/60 pl-10 pr-3.5 text-sm text-[#242B28] focus:border-[#173F35] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173F35]/15 transition-all"
                   >
-                    {PROJECT_LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <option key={loc} value={loc}>
                         {loc}
                       </option>

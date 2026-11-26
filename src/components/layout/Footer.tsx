@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowUpRight } from 'lucide-react'
 import { BrandLogo } from '@/components/common/BrandLogo'
 import { APP_CONFIG } from '@/lib/config'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 
 const navLinks = [
   { label: 'Beranda', to: '/' },
@@ -12,14 +13,13 @@ const navLinks = [
   { label: 'Portal Administrator', to: '/admin/login' },
 ]
 
-const projectLinks = [
-  { label: 'Serenity Forest Residence — BSD City', to: '/proyek/serenity-forest-residence' },
-  { label: 'Verdant Hills Estate — Sentul Selatan', to: '/proyek/verdant-hills-estate' },
-  { label: 'The Canopy Park — Cibubur', to: '/proyek/the-canopy-park' },
-]
-
 export function Footer() {
+  const { projects } = usePublicCatalog()
   const currentYear = new Date().getFullYear()
+  const projectLinks = projects.slice(0, 3).map((p) => ({
+    label: `${p.name} — ${p.city}`,
+    to: `/proyek/${p.slug}`,
+  }))
 
   return (
     <footer className="bg-[#173F35] text-white">

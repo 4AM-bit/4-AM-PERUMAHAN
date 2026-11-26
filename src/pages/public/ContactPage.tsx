@@ -15,13 +15,14 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { APP_CONFIG } from '@/lib/config'
-import { DEMO_PROJECTS } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import { contactFormSchema, type ContactFormValues } from '@/schemas/contactSchema'
 import { cn } from '@/utils/cn'
 
 export function ContactPage() {
+  const { projects } = usePublicCatalog()
   const [submittedData, setSubmittedData] = useState<ContactFormValues | null>(null)
-  const [selectedMapId, setSelectedMapId] = useState<string>(DEMO_PROJECTS[0].id)
+  const [selectedMapId, setSelectedMapId] = useState<string>('')
 
   const {
     register,
@@ -34,7 +35,7 @@ export function ContactPage() {
       fullName: '',
       email: '',
       phone: '',
-      projectInterest: DEMO_PROJECTS[0].name,
+      projectInterest: projects[0]?.name ?? 'Konsultasi Umum / KPR',
       subject: '',
       message: '',
     },
@@ -46,7 +47,7 @@ export function ContactPage() {
   }
 
   const activeMapProject =
-    DEMO_PROJECTS.find((proj) => proj.id === selectedMapId) ?? DEMO_PROJECTS[0]
+    projects.find((proj) => proj.id === selectedMapId) ?? projects[0]
 
   return (
     <>
@@ -210,7 +211,7 @@ export function ContactPage() {
                       {...register('projectInterest')}
                       className="h-11 w-full rounded-xl border border-[#E3E0D6] bg-[#F5F4EF]/50 px-3.5 text-sm text-[#242B28] focus:border-[#173F35] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173F35]/15"
                     >
-                      {DEMO_PROJECTS.map((proj) => (
+                      {projects.map((proj) => (
                         <option key={proj.id} value={proj.name}>
                           {proj.name} — {proj.city}
                         </option>
@@ -365,14 +366,14 @@ export function ContactPage() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {DEMO_PROJECTS.map((proj) => (
+                {projects.map((proj) => (
                   <button
                     key={proj.id}
                     type="button"
                     onClick={() => setSelectedMapId(proj.id)}
                     className={cn(
                       'rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer',
-                      selectedMapId === proj.id
+                      activeMapProject?.id === proj.id
                         ? 'bg-[#173F35] text-white'
                         : 'bg-[#F5F4EF] text-[#5F6B66] hover:bg-[#ECEAE1] hover:text-[#173F35]',
                     )}

@@ -2,9 +2,11 @@ import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
 import { ProjectCard } from '@/components/property/ProjectCard'
-import { DEMO_PROJECTS } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 
 export function FeaturedProjectsSection() {
+  const { projects } = usePublicCatalog()
+
   return (
     <section className="py-20 lg:py-24 bg-[#F5F4EF]">
       <div className="container-app">
@@ -21,7 +23,7 @@ export function FeaturedProjectsSection() {
         />
 
         <div className="mt-12 grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
-          {DEMO_PROJECTS.map((project) => (
+          {projects.slice(0, 3).map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>

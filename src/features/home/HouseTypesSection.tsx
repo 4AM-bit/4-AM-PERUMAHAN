@@ -2,7 +2,7 @@ import { ArrowRight, RotateCcw } from 'lucide-react'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
 import { HouseTypeCard } from '@/components/property/HouseTypeCard'
-import { DEMO_HOUSE_TYPES } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import type { PropertySearchQuery } from '@/types/property'
 
 interface HouseTypesSectionProps {
@@ -21,15 +21,20 @@ export function HouseTypesSection({
   searchQuery,
   onResetSearch,
 }: HouseTypesSectionProps) {
+  const { houseTypes } = usePublicCatalog()
+
   const hasActiveFilter =
     searchQuery.keyword.trim() !== '' ||
     searchQuery.location !== 'Semua Lokasi' ||
     searchQuery.priceRange !== 'all' ||
     searchQuery.bedrooms !== 'all'
 
+  const featuredList = houseTypes.filter((house) => house.featured)
   const baseList = hasActiveFilter
-    ? DEMO_HOUSE_TYPES
-    : DEMO_HOUSE_TYPES.filter((house) => house.featured)
+    ? houseTypes
+    : featuredList.length > 0
+      ? featuredList.slice(0, 4)
+      : houseTypes.slice(0, 4)
 
   const filteredHouses = baseList.filter((house) => {
     const kw = searchQuery.keyword.trim().toLowerCase()
@@ -78,7 +83,7 @@ export function HouseTypesSection({
                 </Button>
               )}
               <Button variant="outline" to={catalogUrl}>
-                Buka Katalog Lengkap ({DEMO_HOUSE_TYPES.length} Tipe)
+                Buka Katalog Lengkap ({houseTypes.length} Tipe)
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
@@ -89,7 +94,7 @@ export function HouseTypesSection({
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#285C49]/20 bg-[#F5F4EF] px-4 py-3 text-sm">
             <p className="text-[#242B28]">
               Menampilkan <strong className="text-[#173F35]">{filteredHouses.length}</strong> dari{' '}
-              {DEMO_HOUSE_TYPES.length} tipe rumah sesuai kriteria pencarian Anda.
+              {houseTypes.length} tipe rumah sesuai kriteria pencarian Anda.
             </p>
             <button
               type="button"

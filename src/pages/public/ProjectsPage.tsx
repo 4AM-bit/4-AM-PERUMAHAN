@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Building2, MapPin, RotateCcw, Search } from 'lucide-react'
 import { ProjectCard } from '@/components/property/ProjectCard'
 import { Button } from '@/components/ui/Button'
-import { DEMO_PROJECTS, PROJECT_LOCATIONS } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import type { ProjectStatus } from '@/types/property'
 
 const STATUS_OPTIONS: Array<{ label: string; value: 'all' | ProjectStatus }> = [
@@ -13,22 +13,23 @@ const STATUS_OPTIONS: Array<{ label: string; value: 'all' | ProjectStatus }> = [
 ]
 
 export function ProjectsPage() {
+  const { projects, locations } = usePublicCatalog()
   const [search, setSearch] = useState('')
   const [location, setLocation] = useState<string>('Semua Lokasi')
   const [status, setStatus] = useState<'all' | ProjectStatus>('all')
 
   const totalUnits = useMemo(
-    () => DEMO_PROJECTS.reduce((acc, item) => acc + item.totalUnits, 0),
-    [],
+    () => projects.reduce((acc, item) => acc + item.totalUnits, 0),
+    [projects],
   )
   const availableUnits = useMemo(
-    () => DEMO_PROJECTS.reduce((acc, item) => acc + item.availableUnits, 0),
-    [],
+    () => projects.reduce((acc, item) => acc + item.availableUnits, 0),
+    [projects],
   )
 
   const filteredProjects = useMemo(() => {
     const q = search.trim().toLowerCase()
-    return DEMO_PROJECTS.filter((project) => {
+    return projects.filter((project) => {
       const matchSearch =
         !q ||
         project.name.toLowerCase().includes(q) ||
@@ -39,7 +40,7 @@ export function ProjectsPage() {
       const matchStatus = status === 'all' || project.status === status
       return matchSearch && matchLocation && matchStatus
     })
-  }, [search, location, status])
+  }, [projects, search, location, status])
 
   const hasFilter =
     search.trim() !== '' || location !== 'Semua Lokasi' || status !== 'all'
@@ -71,7 +72,7 @@ export function ProjectsPage() {
             <div className="rounded-2xl border border-white/15 bg-white/8 px-5 py-4">
               <p className="text-xs text-white/70">Total Proyek Aktif</p>
               <p className="mt-1 font-display text-2xl font-bold text-white">
-                {DEMO_PROJECTS.length} Kawasan
+                {projects.length} Kawasan
               </p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/8 px-5 py-4">
@@ -129,7 +130,7 @@ export function ProjectsPage() {
                     onChange={(e) => setLocation(e.target.value)}
                     className="h-11 w-full rounded-xl border border-[#E3E0D6] bg-[#F5F4EF]/60 pl-10 pr-3.5 text-sm text-[#242B28] focus:border-[#173F35] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173F35]/15"
                   >
-                    {PROJECT_LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <option key={loc} value={loc}>
                         {loc}
                       </option>
@@ -177,7 +178,7 @@ export function ProjectsPage() {
           <div className="mt-6 flex items-center justify-between text-sm text-[#5F6B66]">
             <p>
               Menampilkan <strong className="text-[#173F35]">{filteredProjects.length}</strong>{' '}
-              dari {DEMO_PROJECTS.length} proyek perumahan
+              dari {projects.length} proyek perumahan
             </p>
             <Button variant="ghost" size="sm" to="/katalog">
               <Building2 className="h-4 w-4" />

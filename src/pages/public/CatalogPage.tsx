@@ -3,12 +3,8 @@ import { useSearchParams } from 'react-router-dom'
 import { ArrowUpDown, MapPin, RotateCcw, Search, SlidersHorizontal } from 'lucide-react'
 import { HouseTypeCard } from '@/components/property/HouseTypeCard'
 import { Button } from '@/components/ui/Button'
-import {
-  DEMO_HOUSE_TYPES,
-  DEMO_PROJECTS,
-  PRICE_RANGES,
-  PROJECT_LOCATIONS,
-} from '@/lib/demo-data'
+import { PRICE_RANGES } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 
 type SortOption = 'recommended' | 'price-asc' | 'price-desc' | 'land-desc'
 
@@ -20,6 +16,7 @@ function matchesPriceRange(price: number, range: string): boolean {
 }
 
 export function CatalogPage() {
+  const { projects, houseTypes, locations } = usePublicCatalog()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const keyword = searchParams.get('q') ?? ''
@@ -52,7 +49,7 @@ export function CatalogPage() {
 
   const filteredHouses = useMemo(() => {
     const q = keyword.trim().toLowerCase()
-    const list = DEMO_HOUSE_TYPES.filter((house) => {
+    const list = houseTypes.filter((house) => {
       const matchKeyword =
         !q ||
         house.name.toLowerCase().includes(q) ||
@@ -86,7 +83,7 @@ export function CatalogPage() {
       return [...list].sort((a, b) => b.landArea - a.landArea)
     }
     return list
-  }, [keyword, location, projectSlug, priceRange, bedrooms, sortBy])
+  }, [houseTypes, keyword, location, projectSlug, priceRange, bedrooms, sortBy])
 
   return (
     <>
@@ -162,7 +159,7 @@ export function CatalogPage() {
                     onChange={(e) => updateParam('lokasi', e.target.value, 'Semua Lokasi')}
                     className="h-11 w-full rounded-xl border border-[#E3E0D6] bg-[#F5F4EF]/60 pl-9 pr-2.5 text-sm text-[#242B28] focus:border-[#173F35] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173F35]/15"
                   >
-                    {PROJECT_LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <option key={loc} value={loc}>
                         {loc}
                       </option>
@@ -185,7 +182,7 @@ export function CatalogPage() {
                   className="h-11 w-full rounded-xl border border-[#E3E0D6] bg-[#F5F4EF]/60 px-3 text-sm text-[#242B28] focus:border-[#173F35] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173F35]/15"
                 >
                   <option value="all">Semua Proyek</option>
-                  {DEMO_PROJECTS.map((proj) => (
+                  {projects.map((proj) => (
                     <option key={proj.slug} value={proj.slug}>
                       {proj.name}
                     </option>
@@ -240,7 +237,7 @@ export function CatalogPage() {
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-[#5F6B66]">
               Menampilkan <strong className="text-[#173F35]">{filteredHouses.length}</strong>{' '}
-              dari {DEMO_HOUSE_TYPES.length} tipe rumah
+              dari {houseTypes.length} tipe rumah
             </p>
 
             <div className="flex items-center gap-2.5">

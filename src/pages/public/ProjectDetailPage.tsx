@@ -14,7 +14,7 @@ import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { HouseTypeCard } from '@/components/property/HouseTypeCard'
 import { HouseGallery } from '@/components/property/HouseGallery'
-import { getHouseTypesByProjectId, getProjectBySlug } from '@/lib/demo-data'
+import { usePublicCatalog } from '@/hooks/usePublicCatalog'
 import { APP_CONFIG } from '@/lib/config'
 import { formatCompactPrice } from '@/utils/format'
 import type { ProjectStatus } from '@/types/property'
@@ -28,7 +28,8 @@ const statusMap: Record<ProjectStatus, { label: string; variant: BadgeVariant }>
 
 export function ProjectDetailPage() {
   const { slug = '' } = useParams()
-  const project = getProjectBySlug(slug)
+  const { projects, houseTypes: allHouseTypes } = usePublicCatalog()
+  const project = projects.find((item) => item.slug === slug)
 
   if (!project) {
     return (
@@ -51,7 +52,7 @@ export function ProjectDetailPage() {
     )
   }
 
-  const houseTypes = getHouseTypesByProjectId(project.id)
+  const houseTypes = allHouseTypes.filter((ht) => ht.projectId === project.id)
   const status = statusMap[project.status]
 
   return (
