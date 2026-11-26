@@ -618,21 +618,271 @@ export interface ActorContext {
   fullName?: string
 }
 
+const SOFT_DELETE_TABLES: ReadonlySet<CrudEntityKey> = new Set([
+  'profiles',
+  'projects',
+  'house_types',
+  'units',
+  'payment_accounts',
+  'reservations',
+  'payments',
+])
+
+function fromLiveRow(table: CrudEntityKey, raw: Record<string, unknown>): Record<string, unknown> {
+  if (table === 'profiles') {
+    return {
+      ...raw,
+      nik: raw.identity_number ?? null,
+    }
+  }
+  if (table === 'projects') {
+    const status = raw.status === 'selling' ? 'available' : raw.status
+    return {
+      ...raw,
+      status,
+      featured: Boolean(raw.is_featured),
+      full_description: raw.description ?? '',
+      gallery_urls: raw.cover_image_url ? [raw.cover_image_url] : [],
+      land_area_range: raw.land_area_total ?? '',
+      total_area_hectares: raw.land_area_total ?? '',
+      completion_target: raw.handover_estimate ?? '',
+      map_address: raw.address ?? '',
+      map_lat: null,
+      map_lng: null,
+      nearby_access: [],
+    }
+  }
+  if (table === 'house_types') {
+    return {
+      ...raw,
+      reservation_hold_hours: 24,
+      short_description: raw.description ?? '',
+      full_description: raw.description ?? '',
+      gallery_urls: raw.cover_image_url ? [raw.cover_image_url] : [],
+      floorplan_urls: raw.floorplan_image_url ? [raw.floorplan_image_url] : [],
+      specs: Array.isArray(raw.features) ? raw.features : [],
+      building_specs: Array.isArray(raw.specifications) ? raw.specifications : [],
+      featured: Boolean(raw.is_featured),
+    }
+  }
+  if (table === 'units') {
+    return {
+      ...raw,
+      unit_code: raw.unit_number ?? '',
+      assigned_sales_id: null,
+      notes: raw.notes ?? '',
+    }
+  }
+  if (table === 'reservations') {
+    return {
+      ...raw,
+      customer_name: raw.customer_full_name ?? '',
+      customer_nik: raw.customer_identity_number ?? '',
+      booking_fee: Number(raw.booking_fee_amount ?? 0),
+      unit_price: Number(raw.unit_price ?? 0),
+      cancellation_reason: raw.cancellation_reason ?? '',
+      notes: raw.notes ?? '',
+    }
+  }
+  if (table === 'payments') {
+    return {
+      ...raw,
+      amount: Number(raw.amount ?? 0),
+      payment_date:
+        typeof raw.payment_date === 'string' ? raw.payment_date.slice(0, 10) : null,
+      sender_bank: raw.sender_bank ?? '',
+      sender_name: raw.sender_name ?? '',
+      proof_storage_path: raw.proof_storage_path ?? '',
+      rejection_reason: raw.rejection_reason ?? '',
+      notes: raw.notes ?? '',
+    }
+  }
+  if (table === 'galleries') {
+    return {
+      ...raw,
+      caption: '',
+      is_active: true,
+      deleted_at: null,
+    }
+  }
+  if (table === 'facilities') {
+    return {
+      ...raw,
+      highlight: '',
+      deleted_at: null,
+    }
+  }
+  if (table === 'banners') {
+    return {
+      ...raw,
+      deleted_at: null,
+    }
+  }
+  return raw
+}
+
+function toLivePayload(
+  table: CrudEntityKey,
+  payload: Record<string, unknown>,
+): Record<string, unknown> {
+  if (table === 'profiles') {
+    return {
+      full_name: payload.full_name,
+      email: payload.email,
+      phone: payload.phone ?? '',
+      identity_number: payload.nik ?? null,
+      address: payload.address ?? '',
+      role: payload.role,
+      is_active: payload.is_active ?? true,
+    }
+  }
+  if (table === 'projects') {
+    const status = payload.status === 'available' ? 'selling' : payload.status
+    return {
+      slug: payload.slug,
+      name: payload.name,
+      tagline: payload.tagline ?? '',
+      location: payload.location,
+      city: payload.city,
+      address: payload.map_address ?? payload.location ?? '',
+      description: payload.description ?? '',
+      total_units: Number(payload.total_units ?? 0),
+      starting_price: Number(payload.starting_price ?? 0),
+      status,
+      land_area_total: payload.land_area_range ?? '',
+      handover_estimate: payload.completion_target ?? '',
+      cover_image_url: payload.cover_image_url ?? '',
+      highlights: payload.highlights ?? [],
+      is_featured: Boolean(payload.featured),
+    }
+  }
+  if (table === 'house_types') {
+    return {
+      project_id: payload.project_id,
+      slug: payload.slug,
+      name: payload.name,
+      category: payload.category ?? 'Signature Living',
+      price: Number(payload.price ?? 0),
+      booking_fee: Number(payload.booking_fee ?? 5000000),
+      land_area: Number(payload.land_area ?? 72),
+      building_area: Number(payload.building_area ?? 45),
+      bedrooms: Number(payload.bedrooms ?? 2),
+      bathrooms: Number(payload.bathrooms ?? 1),
+      floors: Number(payload.floors ?? 1),
+      carport: Number(payload.carport ?? 1),
+      description: payload.short_description ?? '',
+      cover_image_url: payload.cover_image_url ?? '',
+      features: payload.specs ?? [],
+      specifications: payload.building_specs ?? [],
+      is_featured: Boolean(payload.featured),
+    }
+  }
+  if (table === 'units') {
+    return {
+      project_id: payload.project_id,
+      house_type_id: payload.house_type_id,
+      unit_number: payload.unit_code,
+      block: payload.block ?? '',
+      price: Number(payload.price ?? 0),
+      land_area: Number(payload.land_area ?? 72),
+      building_area: Number(payload.building_area ?? 45),
+      facing: payload.facing ?? 'Utara',
+      status: payload.status ?? 'available',
+      notes: payload.notes ?? '',
+    }
+  }
+  if (table === 'reservations') {
+    return {
+      reservation_number: payload.reservation_number,
+      customer_id: payload.customer_id,
+      project_id: payload.project_id,
+      house_type_id: payload.house_type_id,
+      unit_id: payload.unit_id,
+      assigned_sales_id: payload.assigned_sales_id ?? null,
+      customer_full_name: payload.customer_name,
+      customer_email: payload.customer_email,
+      customer_phone: payload.customer_phone,
+      customer_identity_number: payload.customer_nik,
+      customer_address: payload.customer_address ?? '',
+      unit_price: Number(payload.unit_price ?? 0),
+      booking_fee_amount: Number(payload.booking_fee ?? 0),
+      status: payload.status,
+      expires_at: payload.expires_at,
+      confirmed_at: payload.confirmed_at ?? null,
+      cancelled_at: payload.cancelled_at ?? null,
+      cancellation_reason: payload.cancellation_reason ?? null,
+      notes: payload.notes ?? null,
+    }
+  }
+  if (table === 'payments') {
+    return {
+      reservation_id: payload.reservation_id,
+      customer_id: payload.customer_id,
+      payment_account_id: payload.payment_account_id ?? null,
+      amount: Number(payload.amount ?? 0),
+      payment_date: payload.payment_date || null,
+      sender_bank: payload.sender_bank || null,
+      sender_name: payload.sender_name || null,
+      proof_storage_path: payload.proof_storage_path || null,
+      status: payload.status,
+      verified_by: payload.verified_by ?? null,
+      verified_at: payload.verified_at ?? null,
+      rejection_reason: payload.rejection_reason || null,
+      notes: payload.notes || null,
+    }
+  }
+  if (table === 'galleries') {
+    return {
+      project_id: payload.project_id ?? null,
+      title: payload.title,
+      category: payload.category,
+      image_url: payload.image_url,
+      is_featured: Boolean(payload.is_active ?? true),
+      display_order: Number(payload.display_order ?? 0),
+    }
+  }
+  if (table === 'facilities') {
+    return {
+      project_id: payload.project_id ?? null,
+      title: payload.title,
+      category: payload.category ?? 'Umum',
+      description: payload.description ?? '',
+      icon_name: payload.icon_name ?? 'shield',
+      display_order: Number(payload.display_order ?? 0),
+      is_active: Boolean(payload.is_active ?? true),
+    }
+  }
+  if (table === 'banners') {
+    return {
+      title: payload.title,
+      subtitle: payload.subtitle ?? '',
+      image_url: payload.image_url,
+      cta_label: payload.cta_label ?? 'Jelajahi Rumah',
+      cta_url: payload.cta_url ?? '/katalog',
+      display_order: Number(payload.display_order ?? 0),
+      is_active: Boolean(payload.is_active ?? true),
+    }
+  }
+  return payload
+}
+
 export const crudService = {
   async list<T extends { id: string; deleted_at?: string | null }>(
     table: CrudEntityKey,
   ): Promise<T[]> {
     if (IS_SUPABASE_CONFIGURED && supabase) {
-      const { data, error } = await supabase
-        .from(table)
-        .select('*')
-        .is('deleted_at', null)
-        .order('created_at', { ascending: false })
+      let query = supabase.from(table).select('*')
+      if (SOFT_DELETE_TABLES.has(table)) {
+        query = query.is('deleted_at', null)
+      }
+      const { data, error } = await query.order('created_at', { ascending: false })
 
       if (error) {
         throw new Error(`Gagal memuat data ${table}: ${error.message}`)
       }
-      return (data ?? []) as T[]
+      return (data ?? []).map((row) =>
+        fromLiveRow(table, row as Record<string, unknown>),
+      ) as unknown as T[]
     }
 
     await new Promise((resolve) => setTimeout(resolve, 160))
@@ -648,9 +898,10 @@ export const crudService = {
     summaryLabel: string,
   ): Promise<T> {
     if (IS_SUPABASE_CONFIGURED && supabase) {
+      const livePayload = toLivePayload(table, payload as Record<string, unknown>)
       const { data, error } = await supabase
         .from(table)
-        .insert(payload as Record<string, unknown>)
+        .insert(livePayload)
         .select('*')
         .single()
 
@@ -658,16 +909,17 @@ export const crudService = {
         throw new Error(`Gagal menambah data ${table}: ${error?.message ?? 'Unknown error'}`)
       }
 
+      const mapped = fromLiveRow(table, data as Record<string, unknown>) as unknown as T
       await supabase.from('activity_logs').insert({
         actor_id: actor.id,
         actor_role: actor.role,
         action: `${table}.created`,
         entity_type: table,
-        entity_id: (data as T).id,
-        summary: `Menambahkan ${summaryLabel}`,
+        entity_id: mapped.id,
+        metadata: { summary: `Menambahkan ${summaryLabel}` },
       })
 
-      return data as T
+      return mapped
     }
 
     await new Promise((resolve) => setTimeout(resolve, 220))
@@ -702,10 +954,11 @@ export const crudService = {
     summaryLabel: string,
   ): Promise<T> {
     if (IS_SUPABASE_CONFIGURED && supabase) {
+      const livePatch = toLivePayload(table, patch as Record<string, unknown>)
       const { data, error } = await supabase
         .from(table)
         .update({
-          ...(patch as Record<string, unknown>),
+          ...livePatch,
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
@@ -722,10 +975,10 @@ export const crudService = {
         action: `${table}.updated`,
         entity_type: table,
         entity_id: id,
-        summary: `Memperbarui ${summaryLabel}`,
+        metadata: { summary: `Memperbarui ${summaryLabel}` },
       })
 
-      return data as T
+      return fromLiveRow(table, data as Record<string, unknown>) as unknown as T
     }
 
     await new Promise((resolve) => setTimeout(resolve, 200))
@@ -766,11 +1019,11 @@ export const crudService = {
     summaryLabel: string,
   ): Promise<void> {
     if (IS_SUPABASE_CONFIGURED && supabase) {
-      const { error } = await supabase
-        .from(table)
-        .update({ deleted_at: new Date().toISOString() })
-        .eq('id', id)
+      const query = SOFT_DELETE_TABLES.has(table)
+        ? supabase.from(table).update({ deleted_at: new Date().toISOString() }).eq('id', id)
+        : supabase.from(table).delete().eq('id', id)
 
+      const { error } = await query
       if (error) {
         throw new Error(error.message)
       }
@@ -781,7 +1034,7 @@ export const crudService = {
         action: `${table}.deleted`,
         entity_type: table,
         entity_id: id,
-        summary: `Menghapus (soft delete) ${summaryLabel}`,
+        metadata: { summary: `Menghapus ${summaryLabel}` },
       })
       return
     }

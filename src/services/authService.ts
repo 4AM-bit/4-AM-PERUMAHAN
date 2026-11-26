@@ -130,7 +130,7 @@ interface DbProfileRow {
   email: string
   full_name: string | null
   phone: string | null
-  nik: string | null
+  identity_number: string | null
   address: string | null
   role: string
   is_active: boolean | null
@@ -144,7 +144,7 @@ function mapDbProfile(row: DbProfileRow): UserProfile {
     email: row.email,
     fullName: row.full_name ?? '',
     phone: row.phone ?? '',
-    nik: row.nik ?? '',
+    nik: row.identity_number ?? '',
     address: row.address ?? '',
     role: normalizeRole(row.role),
     isActive: row.is_active ?? true,
@@ -165,7 +165,7 @@ async function fetchSupabaseProfile(userId: string): Promise<UserProfile> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, email, full_name, phone, nik, address, role, is_active, created_at, updated_at')
+    .select('id, email, full_name, phone, identity_number, address, role, is_active, created_at, updated_at')
     .eq('id', userId)
     .single<DbProfileRow>()
 
@@ -396,12 +396,12 @@ export const authService = {
         .update({
           full_name: input.fullName.trim(),
           phone: input.phone.trim(),
-          nik: input.nik.trim() || null,
-          address: input.address.trim() || null,
+          identity_number: input.nik.trim() || null,
+          address: input.address.trim() || '',
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId)
-        .select('id, email, full_name, phone, nik, address, role, is_active, created_at, updated_at')
+        .select('id, email, full_name, phone, identity_number, address, role, is_active, created_at, updated_at')
         .single<DbProfileRow>()
 
       if (error || !data) {
