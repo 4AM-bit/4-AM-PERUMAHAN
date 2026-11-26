@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -22,6 +22,7 @@ import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { HouseGallery } from '@/components/property/HouseGallery'
 import { FloorplanViewer } from '@/components/property/FloorplanViewer'
+import { useAuth } from '@/contexts/AuthContext'
 import { getHouseTypeBySlug, getProjectBySlug } from '@/lib/demo-data'
 import { APP_CONFIG } from '@/lib/config'
 import { formatArea, formatCurrency } from '@/utils/format'
@@ -37,6 +38,8 @@ const unitStatusLabel: Record<UnitStatus, { label: string; variant: BadgeVariant
 
 export function HouseDetailPage() {
   const { slug = '' } = useParams()
+  const navigate = useNavigate()
+  const { user, isAuthenticated } = useAuth()
   const house = getHouseTypeBySlug(slug)
   const project = house ? getProjectBySlug(house.projectSlug) : undefined
 
@@ -360,7 +363,15 @@ export function HouseDetailPage() {
                   variant="primary"
                   size="lg"
                   className="w-full"
-                  onClick={() => setShowReservationModal(true)}
+                  onClick={() => {
+                    if (isAuthenticated && user?.role === 'customer') {
+                      navigate(
+                        `/dashboard/reservasi/baru?proyek=${encodeURIComponent(project.slug)}&tipe=${encodeURIComponent(house.slug)}`,
+                      )
+                      return
+                    }
+                    setShowReservationModal(true)
+                  }}
                 >
                   <Lock className="h-4 w-4 text-[#D8B978]" />
                   Reservasi Unit {selectedUnit?.unitCode ?? ''}

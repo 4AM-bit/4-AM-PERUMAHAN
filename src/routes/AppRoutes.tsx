@@ -17,6 +17,8 @@ import { UnauthorizedPage } from '@/pages/auth/UnauthorizedPage'
 import { ProfilePage } from '@/pages/auth/ProfilePage'
 import { CustomerShellLayout } from '@/pages/customer/CustomerShellLayout'
 import { CustomerOverviewPage } from '@/pages/customer/CustomerOverviewPage'
+import { CustomerReservationsPage } from '@/pages/customer/CustomerReservationsPage'
+import { NewReservationPage } from '@/pages/customer/NewReservationPage'
 import { AdminShellLayout } from '@/pages/admin/AdminShellLayout'
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
 import { AdminProjectsPage } from '@/pages/admin/crud/AdminProjectsPage'
@@ -68,16 +70,8 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<CustomerShellLayout />}>
           <Route index element={<CustomerOverviewPage />} />
           <Route path="profil" element={<ProfilePage />} />
-          <Route
-            path="reservasi"
-            element={
-              <PhasePlaceholderPage
-                title="Reservasi Saya"
-                phase="Dijadwalkan pada Phase 6 & Phase 8"
-                description="Daftar reservasi unit, nomor reservasi otomatis, hitung mundur masa berlaku, dan detail unit terkunci akan dibangun pada Phase 6 & Phase 8."
-              />
-            }
-          />
+          <Route path="reservasi" element={<CustomerReservationsPage />} />
+          <Route path="reservasi/baru" element={<NewReservationPage />} />
           <Route
             path="pembayaran"
             element={
