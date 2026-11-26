@@ -91,30 +91,82 @@ export function CustomerOverviewPage() {
       </div>
 
       {latest && (
-        <div className="rounded-2xl border border-[#E3E0D6] bg-white p-6 shadow-[var(--shadow-card)] flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#285C49]">
-              Reservasi Terbaru Anda
-            </p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-2">
-              <code className="font-mono text-xs font-bold text-[#173F35]">
-                {latest.reservation_number}
-              </code>
-              <Badge variant={RESERVATION_STATUS_META[latest.status].variant}>
-                {RESERVATION_STATUS_META[latest.status].label}
-              </Badge>
+        <div className="rounded-2xl border border-[#E3E0D6] bg-white p-6 shadow-[var(--shadow-card)] space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#285C49]">
+                Reservasi Terbaru Anda
+              </p>
+              <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                <code className="font-mono text-xs font-bold text-[#173F35]">
+                  {latest.reservation_number}
+                </code>
+                <Badge variant={RESERVATION_STATUS_META[latest.status].variant}>
+                  {RESERVATION_STATUS_META[latest.status].label}
+                </Badge>
+              </div>
+              <p className="mt-2 font-display text-base font-bold text-[#173F35]">
+                Unit {latest.unitCode} — {latest.houseTypeName} ({latest.projectName})
+              </p>
+              <p className="text-xs text-[#5F6B66]">
+                Booking Fee: {formatCurrency(latest.booking_fee)}
+              </p>
             </div>
-            <p className="mt-2 font-display text-base font-bold text-[#173F35]">
-              Unit {latest.unitCode} — {latest.houseTypeName} ({latest.projectName})
-            </p>
-            <p className="text-xs text-[#5F6B66]">
-              Booking Fee: {formatCurrency(latest.booking_fee)}
-            </p>
+            <div className="flex items-center gap-2">
+              {latest.status === 'pending' && (
+                <Button
+                  variant="gold"
+                  size="sm"
+                  to={`/dashboard/pembayaran?reservasi=${latest.id}`}
+                >
+                  Unggah Bukti
+                </Button>
+              )}
+              <Button variant="primary" size="sm" to="/dashboard/reservasi">
+                Lihat Detail
+                <ArrowRight className="h-3.5 w-3.5 text-[#D8B978]" />
+              </Button>
+            </div>
           </div>
-          <Button variant="primary" size="sm" to="/dashboard/reservasi">
-            Lihat Detail
-            <ArrowRight className="h-3.5 w-3.5 text-[#D8B978]" />
-          </Button>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-4 border-t border-[#E3E0D6]">
+            {[
+              { step: 1, label: 'Unit Terkunci', done: true },
+              {
+                step: 2,
+                label: 'Bukti Diunggah',
+                done: ['awaiting_verification', 'confirmed', 'completed'].includes(latest.status),
+              },
+              {
+                step: 3,
+                label: 'Terverifikasi Admin',
+                done: ['confirmed', 'completed'].includes(latest.status),
+              },
+              {
+                step: 4,
+                label: 'Selesai / Akad',
+                done: latest.status === 'completed',
+              },
+            ].map((item) => (
+              <div
+                key={item.step}
+                className={`rounded-xl border px-3 py-2.5 text-xs flex items-center gap-2 ${
+                  item.done
+                    ? 'border-[#285C49]/30 bg-[#F5F4EF] text-[#173F35] font-semibold'
+                    : 'border-[#E3E0D6] bg-white text-[#5F6B66]'
+                }`}
+              >
+                <span
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                    item.done ? 'bg-[#173F35] text-[#D8B978]' : 'bg-[#ECEAE1] text-[#5F6B66]'
+                  }`}
+                >
+                  {item.step}
+                </span>
+                <span className="truncate">{item.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

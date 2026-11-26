@@ -23,6 +23,8 @@ import { CustomerPaymentsPage } from '@/pages/customer/CustomerPaymentsPage'
 import { AdminShellLayout } from '@/pages/admin/AdminShellLayout'
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
 import { AdminPaymentVerificationPage } from '@/pages/admin/AdminPaymentVerificationPage'
+import { AdminActivityLogsPage } from '@/pages/admin/AdminActivityLogsPage'
+import { AdminSettingsPage } from '@/pages/admin/AdminSettingsPage'
 import { AdminProjectsPage } from '@/pages/admin/crud/AdminProjectsPage'
 import { AdminHouseTypesPage } from '@/pages/admin/crud/AdminHouseTypesPage'
 import { AdminUnitsPage } from '@/pages/admin/crud/AdminUnitsPage'
@@ -128,16 +130,7 @@ export function AppRoutes() {
                 />
               }
             />
-            <Route
-              path="logs"
-              element={
-                <PhasePlaceholderPage
-                  title="Activity Logs"
-                  phase="Dijadwalkan pada Phase 8 & Phase 9"
-                  description="Riwayat audit seluruh aktivitas administrator dan transaksi akan ditampilkan pada Phase 8."
-                />
-              }
-            />
+            <Route path="logs" element={<AdminActivityLogsPage />} />
           </Route>
 
           {/* Accessible strictly by Super Admin */}
@@ -150,16 +143,7 @@ export function AppRoutes() {
             }
           >
             <Route path="administrator" element={<AdminAdministratorsPage />} />
-            <Route
-              path="pengaturan"
-              element={
-                <PhasePlaceholderPage
-                  title="Pengaturan Sistem"
-                  phase="Dijadwalkan pada Phase 8"
-                  description="Konfigurasi masa berlaku reservasi dan profil developer akan dibangun pada Phase 8."
-                />
-              }
-            />
+            <Route path="pengaturan" element={<AdminSettingsPage />} />
           </Route>
         </Route>
       </Route>
