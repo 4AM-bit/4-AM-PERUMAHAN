@@ -19,14 +19,15 @@ import { CustomerShellLayout } from '@/pages/customer/CustomerShellLayout'
 import { CustomerOverviewPage } from '@/pages/customer/CustomerOverviewPage'
 import { CustomerReservationsPage } from '@/pages/customer/CustomerReservationsPage'
 import { NewReservationPage } from '@/pages/customer/NewReservationPage'
+import { CustomerPaymentsPage } from '@/pages/customer/CustomerPaymentsPage'
 import { AdminShellLayout } from '@/pages/admin/AdminShellLayout'
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
+import { AdminPaymentVerificationPage } from '@/pages/admin/AdminPaymentVerificationPage'
 import { AdminProjectsPage } from '@/pages/admin/crud/AdminProjectsPage'
 import { AdminHouseTypesPage } from '@/pages/admin/crud/AdminHouseTypesPage'
 import { AdminUnitsPage } from '@/pages/admin/crud/AdminUnitsPage'
 import { AdminCustomersPage } from '@/pages/admin/crud/AdminCustomersPage'
 import { AdminReservationsPage } from '@/pages/admin/crud/AdminReservationsPage'
-import { AdminPaymentsPage } from '@/pages/admin/crud/AdminPaymentsPage'
 import { AdminPaymentAccountsPage } from '@/pages/admin/crud/AdminPaymentAccountsPage'
 import { AdminBannersPage } from '@/pages/admin/crud/AdminBannersPage'
 import { AdminGalleriesPage } from '@/pages/admin/crud/AdminGalleriesPage'
@@ -72,16 +73,7 @@ export function AppRoutes() {
           <Route path="profil" element={<ProfilePage />} />
           <Route path="reservasi" element={<CustomerReservationsPage />} />
           <Route path="reservasi/baru" element={<NewReservationPage />} />
-          <Route
-            path="pembayaran"
-            element={
-              <PhasePlaceholderPage
-                title="Riwayat & Upload Bukti Pembayaran"
-                phase="Dijadwalkan pada Phase 7 & Phase 8"
-                description="Instruksi rekening developer, upload bukti transfer ke private storage, dan status verifikasi admin akan dibangun pada Phase 7."
-              />
-            }
-          />
+          <Route path="pembayaran" element={<CustomerPaymentsPage />} />
           <Route
             path="notifikasi"
             element={
@@ -121,7 +113,7 @@ export function AppRoutes() {
           >
             <Route path="proyek" element={<AdminProjectsPage />} />
             <Route path="tipe-rumah" element={<AdminHouseTypesPage />} />
-            <Route path="pembayaran" element={<AdminPaymentsPage />} />
+            <Route path="pembayaran" element={<AdminPaymentVerificationPage />} />
             <Route path="rekening" element={<AdminPaymentAccountsPage />} />
             <Route path="banner" element={<AdminBannersPage />} />
             <Route path="galeri" element={<AdminGalleriesPage />} />
