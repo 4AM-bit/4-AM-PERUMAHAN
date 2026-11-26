@@ -7,7 +7,7 @@ export const IS_SUPABASE_CONFIGURED = Boolean(
 export const IS_DEMO_MODE = !IS_SUPABASE_CONFIGURED
 
 export const APP_CONFIG = {
-  brandName: 'PERUMAHAN',
+  brandName: '4 AM PERUMAHAN',
   legalName: 'PT Perumahan Nusantara Properti',
   tagline: 'Hunian Modern Bernilai Tinggi dengan Sistem Reservasi Transparan',
   phone: '+62 21 5088 9400',

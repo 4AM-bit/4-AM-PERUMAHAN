@@ -16,7 +16,7 @@ export function BrandLogo({
     <Link
       to="/"
       className={cn('inline-flex items-center gap-3 group', className)}
-      aria-label="PERUMAHAN - Beranda"
+      aria-label="4 AM PERUMAHAN - Beranda"
     >
       <div
         className={cn(
@@ -60,11 +60,11 @@ export function BrandLogo({
       <div className="flex flex-col leading-none">
         <span
           className={cn(
-            'font-display text-lg font-extrabold tracking-[0.12em]',
+            'font-display text-base sm:text-lg font-extrabold tracking-[0.08em]',
             light ? 'text-white' : 'text-[#173F35]',
           )}
         >
-          PERUMAHAN
+          4 AM PERUMAHAN
         </span>
         {showSubtitle && (
           <span
