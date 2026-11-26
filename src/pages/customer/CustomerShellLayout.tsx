@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   Bell,
@@ -15,6 +15,7 @@ import { BrandLogo } from '@/components/common/BrandLogo'
 import { DemoBanner } from '@/components/common/DemoBanner'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/contexts/ToastContext'
+import { notificationService } from '@/services/notificationService'
 import { cn } from '@/utils/cn'
 
 const customerNav = [
@@ -27,9 +28,18 @@ const customerNav = [
 
 export function CustomerShellLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
   const { user, logout } = useAuth()
   const { showToast } = useToast()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) return
+    void notificationService
+      .getUnreadCount(user.id)
+      .then(setUnreadCount)
+      .catch(() => {})
+  }, [user])
 
   const handleLogout = async () => {
     await logout()
@@ -78,7 +88,12 @@ export function CustomerShellLayout() {
                 }
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                {label}
+                <span className="flex-1">{label}</span>
+                {to === '/dashboard/notifikasi' && unreadCount > 0 && (
+                  <span className="rounded-full bg-[#D8B978] px-2 py-0.5 text-[10px] font-bold text-[#173F35]">
+                    {unreadCount}
+                  </span>
+                )}
               </NavLink>
             ))}
           </nav>
