@@ -105,6 +105,10 @@ export function LoginPage() {
 
           {/* Right Form Panel */}
           <div className="lg:col-span-7 p-7 sm:p-10">
+            <div className="lg:hidden mb-6 pb-6 border-b border-[#E3E0D6]">
+              <BrandLogo showSubtitle />
+            </div>
+
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#285C49]">

@@ -79,17 +79,22 @@ export function AdminLoginPage() {
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white p-7 sm:p-8 shadow-2xl">
-          <div className="flex items-center justify-between gap-2">
-            <Badge variant="forest">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#D8B978]" />
-              Akses Terbatas Staff
-            </Badge>
-            {IS_DEMO_MODE && <Badge variant="gold">Demo RBAC</Badge>}
+          <div className="flex items-center gap-3.5 mb-2">
+            <img
+              src="/4am-logo-light.png"
+              alt="4 AM PERUMAHAN"
+              className="h-12 w-12 object-contain shrink-0 drop-shadow-xs"
+            />
+            <div className="flex flex-col">
+              <Badge variant="forest" className="w-fit">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#D8B978]" />
+                Akses Terbatas Staff
+              </Badge>
+              <h1 className="mt-1 font-display text-xl sm:text-2xl font-extrabold text-[#173F35]">
+                Portal Administrator
+              </h1>
+            </div>
           </div>
-
-          <h1 className="mt-4 font-display text-2xl font-extrabold text-[#173F35]">
-            Portal Administrator
-          </h1>
           <p className="mt-1.5 text-xs leading-relaxed text-[#5F6B66]">
             Khusus Sales, Administrator, dan Super Administrator terotorisasi. Verifikasi
             hak akses dilakukan melalui tabel profil server.

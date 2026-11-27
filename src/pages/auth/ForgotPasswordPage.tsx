@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowLeft, CheckCircle2, Mail } from 'lucide-react'
+import { BrandLogo } from '@/components/common/BrandLogo'
 import { Button } from '@/components/ui/Button'
 import { authService } from '@/services/authService'
 import {
@@ -40,6 +41,10 @@ export function ForgotPasswordPage() {
     <section className="py-16 lg:py-24 bg-[#F5F4EF]">
       <div className="container-app">
         <div className="mx-auto max-w-md rounded-3xl border border-[#E3E0D6] bg-white p-7 sm:p-9 shadow-[var(--shadow-card)]">
+          <div className="mb-6 pb-5 border-b border-[#E3E0D6]">
+            <BrandLogo showSubtitle />
+          </div>
+
           <Link
             to="/login"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#285C49] hover:text-[#173F35]"

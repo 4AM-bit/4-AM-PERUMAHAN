@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { Loader2 } from 'lucide-react'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
@@ -117,9 +116,20 @@ const AdminAdministratorsPage = lazy(() =>
 
 function PageLoader() {
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 bg-[#F5F4EF]">
-      <Loader2 className="h-8 w-8 animate-spin text-[#173F35]" />
-      <p className="text-xs font-medium text-[#5F6B66]">Memuat halaman...</p>
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 bg-[#F5F4EF]">
+      <div className="relative flex items-center justify-center">
+        <img
+          src="/4am-logo-light.png"
+          alt="4 AM PERUMAHAN"
+          className="h-14 w-14 sm:h-16 sm:w-16 object-contain animate-pulse drop-shadow-sm"
+        />
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <p className="font-display text-sm font-bold tracking-wider text-[#173F35]">
+          4 AM PERUMAHAN
+        </p>
+        <p className="text-xs font-medium text-[#5F6B66]">Memuat halaman...</p>
+      </div>
     </div>
   )
 }

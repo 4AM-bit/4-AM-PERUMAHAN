@@ -1,62 +1,50 @@
 import { Link } from 'react-router-dom'
 import { cn } from '@/utils/cn'
 
-interface BrandLogoProps {
+export interface BrandLogoProps {
   light?: boolean
+  variant?: 'auto' | 'dark' | 'light'
   showSubtitle?: boolean
   className?: string
+  iconSize?: 'sm' | 'md' | 'lg' | 'xl'
+  to?: string
 }
 
 export function BrandLogo({
   light = false,
+  variant = 'auto',
   showSubtitle = false,
   className,
+  iconSize = 'md',
+  to = '/',
 }: BrandLogoProps) {
-  return (
-    <Link
-      to="/"
-      className={cn('inline-flex items-center gap-3 group', className)}
-      aria-label="4 AM PERUMAHAN - Beranda"
-    >
-      <div
+  // If variant is explicit, use it.
+  // Otherwise: light theme (placed on dark bg) uses 4am-logo-dark.png; default (placed on light bg) uses 4am-logo-light.png
+  const isDarkBg = variant === 'dark' || (variant === 'auto' && light)
+  const logoSrc = isDarkBg ? '/4am-logo-dark.png' : '/4am-logo-light.png'
+
+  const sizeClasses = {
+    sm: 'h-8 w-8',
+    md: 'h-10 w-10 sm:h-11 sm:w-11',
+    lg: 'h-12 w-12 sm:h-14 sm:w-14',
+    xl: 'h-16 w-16 sm:h-20 sm:w-20',
+  }
+
+  const content = (
+    <>
+      <img
+        src={logoSrc}
+        alt="4 AM PERUMAHAN"
+        width={44}
+        height={44}
         className={cn(
-          'flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-[1.03]',
-          light
-            ? 'bg-white/10 border border-white/15'
-            : 'bg-[#173F35] shadow-xs',
+          'shrink-0 object-contain aspect-square transition-transform duration-300 group-hover:scale-[1.04]',
+          sizeClasses[iconSize],
+          !isDarkBg && 'drop-shadow-xs',
         )}
-      >
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M3.5 11.2L12 4L20.5 11.2"
-            stroke="#D8B978"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M6.5 9.8V19.5H17.5V9.8"
-            stroke="white"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M10.25 19.5V14.25H13.75V19.5"
-            stroke="#D8B978"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
+        loading="eager"
+        decoding="async"
+      />
       <div className="flex flex-col leading-none">
         <span
           className={cn(
@@ -77,6 +65,24 @@ export function BrandLogo({
           </span>
         )}
       </div>
-    </Link>
+    </>
+  )
+
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className={cn('inline-flex items-center gap-3 group select-none', className)}
+        aria-label="4 AM PERUMAHAN - Beranda"
+      >
+        {content}
+      </Link>
+    )
+  }
+
+  return (
+    <div className={cn('inline-flex items-center gap-3 select-none', className)}>
+      {content}
+    </div>
   )
 }

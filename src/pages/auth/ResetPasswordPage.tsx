@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, CheckCircle2, Eye, EyeOff, Lock } from 'lucide-react'
+import { BrandLogo } from '@/components/common/BrandLogo'
 import { Button } from '@/components/ui/Button'
 import { authService } from '@/services/authService'
 import { useToast } from '@/contexts/ToastContext'
@@ -49,6 +50,10 @@ export function ResetPasswordPage() {
     <section className="py-16 lg:py-24 bg-[#F5F4EF]">
       <div className="container-app">
         <div className="mx-auto max-w-md rounded-3xl border border-[#E3E0D6] bg-white p-7 sm:p-9 shadow-[var(--shadow-card)]">
+          <div className="mb-6 pb-5 border-b border-[#E3E0D6]">
+            <BrandLogo showSubtitle />
+          </div>
+
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#285C49]">
             Keamanan Akun
           </p>

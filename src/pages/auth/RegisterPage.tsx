@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { BrandLogo } from '@/components/common/BrandLogo'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/contexts/ToastContext'
 import { IS_DEMO_MODE } from '@/lib/config'
@@ -75,6 +76,10 @@ export function RegisterPage() {
     <section className="py-12 lg:py-16 bg-[#F5F4EF]">
       <div className="container-app">
         <div className="mx-auto max-w-xl rounded-3xl border border-[#E3E0D6] bg-white p-7 sm:p-10 shadow-[var(--shadow-card)]">
+          <div className="mb-6 pb-6 border-b border-[#E3E0D6]">
+            <BrandLogo showSubtitle />
+          </div>
+
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#285C49]">
