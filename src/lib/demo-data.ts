@@ -680,7 +680,7 @@ export const DEMO_FAQS: FaqItem[] = [
     category: 'Pembayaran',
     question: 'Bagaimana sistem pembayaran booking fee dilakukan?',
     answer:
-      'Pembayaran dilakukan secara manual melalui transfer bank ke rekening resmi PT Perumahan Nusantara Properti yang tertera pada instruksi pembayaran. Setelah transfer, unggah bukti pembayaran di dashboard pelanggan agar tim administrator dapat memverifikasi dalam 1×24 jam kerja.',
+      'Pembayaran dilakukan secara manual melalui transfer bank ke rekening resmi PT Abdurrahman Properti yang tertera pada instruksi pembayaran. Setelah transfer, unggah bukti pembayaran di dashboard pelanggan agar tim administrator dapat memverifikasi dalam 1×24 jam kerja.',
   },
   {
     id: 'faq-3',

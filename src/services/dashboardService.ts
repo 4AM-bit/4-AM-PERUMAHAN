@@ -189,8 +189,8 @@ export const dashboardService = {
 
       return {
         reservationExpiryHours: Number(expiry.hours ?? 24),
-        officeName: String(contact.office_name ?? 'Marketing Gallery PERUMAHAN'),
-        whatsapp: String(contact.whatsapp ?? '6281294008800'),
+        officeName: String(contact.office_name ?? 'Marketing Gallery PT Abdurrahman Properti'),
+        whatsapp: String(contact.whatsapp ?? '6282171218646'),
         email: String(contact.email ?? 'halo@perumahan.co.id'),
         address: String(
           contact.address ??
@@ -202,7 +202,7 @@ export const dashboardService = {
     const demo = loadDemoDb().settings
     return {
       reservationExpiryHours: demo.reservationExpiryHours,
-      officeName: 'Marketing Gallery PERUMAHAN',
+      officeName: 'Marketing Gallery PT Abdurrahman Properti',
       whatsapp: demo.whatsappNumber,
       email: demo.supportEmail,
       address: demo.officeAddress,
