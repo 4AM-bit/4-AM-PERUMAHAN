@@ -82,12 +82,17 @@ export function Footer() {
 
           <div className="lg:col-span-3 space-y-4">
             <h3 className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-[#D8B978]">
-              Marketing Gallery
+              Kantor &amp; Galeri
             </h3>
             <ul className="space-y-3.5 text-sm text-white/75">
               <li className="flex items-start gap-3">
                 <MapPin className="h-4 w-4 text-[#D8B978] shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{APP_CONFIG.officeAddress}</span>
+                <div className="leading-relaxed">
+                  <p className="font-semibold text-white">Kantor Pusat:</p>
+                  <p className="text-white/80">{APP_CONFIG.headOfficeAddress}</p>
+                  <p className="font-semibold text-white mt-1.5">Kantor Wilayah Aceh:</p>
+                  <p className="text-white/80">{APP_CONFIG.branchOfficeAddress}</p>
+                </div>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-[#D8B978] shrink-0" />

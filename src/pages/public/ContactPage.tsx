@@ -312,20 +312,27 @@ export function ContactPage() {
 
             <div className="rounded-2xl border border-[#E3E0D6] bg-white p-6 shadow-[var(--shadow-card)] space-y-4">
               <h3 className="font-display text-lg font-bold text-[#173F35]">
-                Informasi Kantor Pusat
+                Informasi Kantor &amp; Layanan
               </h3>
               <ul className="space-y-4 text-sm text-[#5F6B66]">
                 <li className="flex items-start gap-3">
                   <MapPin className="h-4 w-4 text-[#285C49] shrink-0 mt-1" />
                   <div>
-                    <p className="font-semibold text-[#173F35]">Alamat Marketing Gallery</p>
-                    <p className="mt-0.5 leading-relaxed">{APP_CONFIG.officeAddress}</p>
+                    <p className="font-semibold text-[#173F35]">Kantor Pusat (Tangerang)</p>
+                    <p className="mt-0.5 leading-relaxed">{APP_CONFIG.headOfficeAddress}</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MapPin className="h-4 w-4 text-[#285C49] shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold text-[#173F35]">Kantor Cabang (Aceh Besar)</p>
+                    <p className="mt-0.5 leading-relaxed">{APP_CONFIG.branchOfficeAddress}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="h-4 w-4 text-[#285C49] shrink-0 mt-1" />
                   <div>
-                    <p className="font-semibold text-[#173F35]">Telepon Resmi</p>
+                    <p className="font-semibold text-[#173F35]">Telepon &amp; WhatsApp Resmi</p>
                     <a href={`tel:${APP_CONFIG.phone}`} className="hover:text-[#173F35]">
                       {APP_CONFIG.phone}
                     </a>

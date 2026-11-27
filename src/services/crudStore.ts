@@ -564,7 +564,7 @@ function buildInitialDemoDb(): DemoDatabase {
       whatsappNumber: '6282171218646',
       supportEmail: 'halo@perumahan.co.id',
       officeAddress:
-        'Marketing Gallery PERUMAHAN, Jl. Boulevard Hijau Kav. 18, BSD City, Tangerang Selatan 15345',
+        'Kantor Pusat: Alam Sutera, Tangerang | Kantor Cabang: Blang Bintang, Aceh Besar',
     },
   }
 }
